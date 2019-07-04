@@ -1,5 +1,5 @@
 module.exports = {
-    NODE_ENV: '"production"',
-    BASE_API: '"https://api-prod"',
+    NODE_ENV: '"development"',
+    BASE_API: '"/ngapi"',    //用nginx去反向代理
     APP_ORIGIN: '"https://wallstreetcn.com"'
-};
+}
