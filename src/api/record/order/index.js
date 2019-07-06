@@ -44,3 +44,10 @@ export function putObj(id, obj) {
     data: obj
   })
 }
+
+export function getMonthReport(){
+  return fetch({
+    url:'/api/record/order/monthReport',
+    method:'post'
+  })
+}

@@ -6,6 +6,9 @@
   import echarts from 'echarts';
   require('echarts/theme/macarons'); // echarts 主题
   const animationDuration = 3000;
+  import {
+ getMonthReport
+} from 'api/record/order/index';
   export default {
     props: {
       className: {
@@ -23,7 +26,9 @@
     },
     data() {
       return {
-        chart: null
+        chart: null,
+        ydata:[79, 52, 200, 334, 390, 330, 220],
+        xdata:['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       };
     },
     mounted() {
@@ -37,9 +42,20 @@
       this.chart = null;
     },
     methods: {
+      initData(){
+      this.listLoading = true;
+      getMonthReport()
+        .then(response => {
+          this.xdata = response.data.month;
+          this.ydata = response.data.amt;
+          console.info(this.xdata)
+          console.info(this.ydata)
+          this.listLoading = false;
+        })
+    },
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');
-
+        console.info(this.xdata)
         this.chart.setOption({
           tooltip: {
             trigger: 'axis',
@@ -55,7 +71,7 @@
           },
           xAxis: [{
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: [],
             axisTick: {
               alignWithLabel: true
             }
@@ -64,27 +80,35 @@
             type: 'value'
           }],
           series: [{
-            name: 'pageA',
+            name: '消费金额',
             type: 'bar',
             stack: 'vistors',
             barWidth: '60%',
-            data: [79, 52, 200, 334, 390, 330, 220],
+            data: [],
             animationDuration
-          }, {
-            name: 'pageB',
-            type: 'bar',
-            stack: 'vistors',
-            barWidth: '60%',
-            data: [80, 52, 200, 334, 390, 330, 220],
-            animationDuration
-          }, {
-            name: 'pageC',
-            type: 'bar',
-            stack: 'vistors',
-            barWidth: '60%',
-            data: [30, 52, 200, 334, 390, 330, 220],
-            animationDuration
-          }]
+          },
+          //  {
+          //   name: 'pageB',
+          //   type: 'bar',
+          //   stack: 'vistors',
+          //   barWidth: '60%',
+          //   data: [80, 52, 200, 334, 390, 330, 220],
+          //   animationDuration
+          // }
+          ]
+        })
+         getMonthReport()
+        .then(response => {
+          this.xdata = response.data.month;
+          this.ydata = response.data.amt;
+           this.chart.setOption({
+              xAxis: {
+            data: this.xdata
+        },
+        series: [{
+            data:this.ydata
+        }]
+           })
         })
       }
     }
